@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -119,16 +120,12 @@ public class RIBBIT extends LinearOpMode {
 
             } else if (gamepad2.dpad_right) {
 
-            wrist.setPosition(wrist.getPosition() - 0.05);
+                wrist.setPosition(wrist.getPosition() - 0.05);
 
-        }else if (gamepad2.right_bumper) {
-                if (Arm.getTargetPosition() >= -5360) {
-                    armPosition -= 40;
-                }
+            }else if (gamepad2.right_bumper) {
+                armPosition -= 40;
             } else if (gamepad2.left_bumper) {
-                if (Arm.getTargetPosition() <= 200) {
-                    armPosition += 40;
-                }
+                armPosition += 40;
             }
             if (gamepad1.right_bumper) {
                 Strafing = true;
@@ -149,6 +146,7 @@ public class RIBBIT extends LinearOpMode {
 
             armPositionFudgeFactor = FUDGE_FACTOR * (gamepad1.right_trigger + (-gamepad1.left_trigger));
 
+            armPosition = Math.max(Math.min(armPosition, 200), -5360);
             Arm.setTargetPosition((int) (armPosition + armPositionFudgeFactor));
             ((DcMotorEx) Arm).setVelocity(2100);
             Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
